@@ -1,0 +1,10 @@
+br\com\geekcode\curso\config\SpringRootConfig.class
+br\com\geekcode\curso\resource\rest\CursoRestController.class
+br\com\geekcode\curso\domain\CargaHoraria.class
+br\com\geekcode\curso\service\CursoService.class
+br\com\geekcode\curso\service\CursoServiceImpl.class
+br\com\geekcode\curso\dao\CursoDao.class
+br\com\geekcode\curso\dao\CursoDaoImpl.class
+br\com\geekcode\curso\domain\Curso.class
+br\com\geekcode\curso\config\SpringInitConfig.class
+br\com\geekcode\curso\config\SpringJpaConfig.class
