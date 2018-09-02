@@ -1,9 +1,11 @@
 package br.com.geekcode.curso.dao;
 
 import br.com.geekcode.curso.domain.Curso;
+import br.com.geekcode.curso.exception.NaoExisteDaoException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
@@ -25,12 +27,20 @@ public class CursoDaoImpl implements CursoDao {
 
     @Override
     public void delete(Long id) {
-        entityManager.remove(entityManager.getReference(Curso.class, id));
+        try {
+            entityManager.remove(entityManager.getReference(Curso.class, id));
+        } catch (EntityNotFoundException ex) {
+            throw new NaoExisteDaoException("Curso não encontrado para id = " + id + ".");
+        }
     }
 
     @Override
     public Curso findById(Long id) {
-        return entityManager.find(Curso.class, id);
+        Curso curso = entityManager.find(Curso.class, id);
+        if (curso == null) {
+            throw new NaoExisteDaoException("Curso não encontrado para id = " + id + ".");
+        }
+        return curso;
     }
 
     @Override

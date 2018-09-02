@@ -2,6 +2,7 @@ package br.com.geekcode.curso.service;
 
 import br.com.geekcode.curso.dao.CursoDao;
 import br.com.geekcode.curso.domain.Curso;
+import br.com.geekcode.curso.exception.IdNaoValidoServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,19 +24,20 @@ public class CursoServiceImpl implements CursoService {
 
     @Override
     public void update(Long id, Curso curso) {
-        curso.setId(id);
+        curso.setId(idValido(id));
+        dao.findById(id);
         dao.update(curso);
     }
 
     @Override
     public void delete(Long id) {
-        dao.delete(id);
+        dao.delete(idValido(id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Curso findById(Long id) {
-        return dao.findById(id);
+        return dao.findById(idValido(id));
     }
 
     @Override
@@ -46,8 +48,16 @@ public class CursoServiceImpl implements CursoService {
 
     @Override
     public Curso updateDataInicio(Long id, Date dataInicio) {
-        Curso curso = dao.findById(id);
+        Curso curso = dao.findById(idValido(id));
         curso.setDataInicio(dataInicio);
         return curso;
+    }
+
+    private Long idValido(Long id) {
+        if (id <= 0) {
+            throw new IdNaoValidoServiceException("Valor do campo id está inválido. " +
+                    "Deve ser um valor inteiro maior que zero.");
+        }
+        return id;
     }
 }

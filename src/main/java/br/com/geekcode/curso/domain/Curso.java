@@ -1,5 +1,7 @@
 package br.com.geekcode.curso.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -26,6 +28,7 @@ public class Curso implements Serializable {
     @Enumerated(EnumType.STRING)
     private CargaHoraria cargaHoraria;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     @Column(name = "data_inicio")
     private Date dataInicio;
 

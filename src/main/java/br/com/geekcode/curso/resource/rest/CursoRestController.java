@@ -5,11 +5,11 @@ import br.com.geekcode.curso.service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -22,6 +22,45 @@ public class CursoRestController {
 
     @Autowired
     private CursoService service;
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable("id") Long id) {
+        service.delete(id);
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Curso editarDataInicio(@PathVariable("id") Long id, @RequestBody Curso curso) {
+        service.updateDataInicio(id, curso.getDataInicio());
+        return curso;
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Curso editar(@PathVariable("id") Long id, @RequestBody Curso curso) {
+        service.update(id, curso);
+        return curso;
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Curso getCurso(@PathVariable("id") Long id) {
+        return service.findById(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> salvar(@RequestBody Curso curso) {
+        service.save(curso);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(curso.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
